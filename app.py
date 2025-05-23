@@ -52,7 +52,7 @@ Client Dataset Preview:
 
         with st.spinner("Analyzing with GPT-4..."):
             response = client.chat.completions.create(
-                model="gpt-4-0125-preview",
+                model="gpt-4.1",
                 messages=[
                     {"role": "system", "content": "You are a CFP and digital wealth advisor."},
                     {"role": "user", "content": prompt}
