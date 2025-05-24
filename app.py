@@ -33,7 +33,7 @@ if data_file and tx_file:
         # Prepare the prompt
         prompt = f"""You are a Certified Financial Planner (CFP®) and a digital family office assistant trained in advanced financial analysis for high-net-worth (HNW) households.
 
-I am uploading two files: (1) a complete household financial profile and (2) a categorized transaction history (3 years). These include:
+You have been provided with two files: (1) a complete household financial profile and (2) a categorized transaction history (3 years). These include:
 
 Net worth breakdown (assets & liabilities)
 
@@ -49,11 +49,9 @@ Financial goals (e.g., retirement, education, real estate)
 
 [Etc.]
 
-✅ Output Requirements:
-
 Each of the following modules should be clearly labeled as a section in your response. All insights must tie directly to the data provided—quantify whenever possible and reference specific fields/values. Use professional, client-ready language with clear next steps, suitable for a white-glove, premium wealth management experience.
 
-Analyze this data and provide the following:
+**Analyze the uploaded data and provide the following:**
 
 1. Financial Summary
 Provide a concise paragraph summarizing the household’s current financial standing, liquidity, and asset mix.
@@ -103,11 +101,22 @@ Comment on the presence or absence of trusts, life/disability insurance, and ben
 
 Recommend review of estate structure, gifting strategies (e.g., DAF), and liability coverage as needed.
 
-Guidelines:
+**Guidelines:**  
+- Each section must be clearly labeled.  
+- Quantify and cite the data for all insights (“You spent $48,000 last year on travel and restaurants”).  
+- Output in markdown for easy formatting.
 
-Each section must be clearly labeled.
+---
 
-Quantify and cite the data for all insights (“You spent $48,000 last year on travel and restaurants”).
+**Household Profile:**  
+{profile_data}
+
+**Transaction History:**  
+{transaction_data}
+
+---
+
+Please begin your analysis immediately.
 """
 
         with st.spinner("Analyzing with GPT-4..."):
