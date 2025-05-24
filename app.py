@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 from openai import OpenAI
@@ -10,106 +9,47 @@ st.set_page_config(page_title="HNW Financial Planning Copilot", layout="wide")
 api_key = st.secrets["OPENAI_API_KEY"] if "OPENAI_API_KEY" in st.secrets else st.text_input("Enter your OpenAI API Key", type="password")
 client = OpenAI(api_key=api_key)
 
-st.title("💼 Advisor Dashboard – HNW Client Copilot")
+st.title("Advisor Dashboard – HNW Client Copilot")
 st.markdown("---")
 
-# Upload Excel file
+# Upload files
 data_file = st.file_uploader("Upload Household Financial Dataset (.xlsx)", type=["xlsx"])
+tx_file = st.file_uploader("Upload Transaction History (.xlsx)", type=["xlsx"])
 
-# Placeholder for analysis output
-if data_file:
+def summarize_excel(file, label):
+    sheet_summaries = []
+    xls = pd.ExcelFile(file)
+    for sheet in xls.sheet_names:
+        df = xls.parse(sheet)
+        sheet_summaries.append(f"### {label}: {sheet}\n\n" + df.head(5).to_markdown(index=False))
+    return "\n\n".join(sheet_summaries)
+
+if data_file and tx_file:
     try:
-        xls = pd.ExcelFile(data_file)
-        sheet_summaries = []
-
-        for sheet in xls.sheet_names:
-            df = xls.parse(sheet)
-            sheet_summaries.append(f"### {sheet}\n\n" + df.head(5).to_markdown(index=False))
-
-        combined_text = "\n\n".join(sheet_summaries)
+        profile_summary = summarize_excel(data_file, "Financial Profile")
+        tx_summary = summarize_excel(tx_file, "Transaction History")
+        combined_text = f"{profile_summary}\n\n{tx_summary}"
 
         # Prepare the prompt
-        prompt = f"""You are a Certified Financial Planner (CFP®) and a digital family office assistant trained in advanced financial analysis for high-net-worth (HNW) households.
+        prompt = f"""You are a Certified Financial Planner (CFP®) acting as a virtual advisor for high-net-worth households.
 
-I am uploading two files: (1) a complete household financial profile and (2) a categorized transaction history (3 years). These include:
+Below is a client's financial dataset, including a family financial profile and three years of transaction history.
 
-Net worth breakdown (assets & liabilities)
+Analyze this data and provide the following:
 
-Investment holdings across brokerage, retirement, and private equity accounts
+1. A short financial summary (paraplanner style)
+2. A net worth and liquidity breakdown
+3. Cash flow & lifestyle analysis
+4. Investment review
+5. Tax optimization insights
+6. Retirement planning feasibility
+7. Education and home goal planning
+8. Estate & risk management observations
 
-RSU vesting schedule
+Be specific. Include quantified insights and actionable advice where possible.
 
-3 years of categorized transaction history from bank and credit card accounts
-
-Income summary
-
-Financial goals (e.g., retirement, education, real estate)
-
-[Etc.]
-
-✅ Output Requirements:
-
-Each of the following modules should be clearly labeled as a section in your response. All insights must tie directly to the data provided—quantify whenever possible and reference specific fields/values. Use professional, client-ready language with clear next steps, suitable for a white-glove, premium wealth management experience.
-
-1. Financial Summary (Paraplanner-Style)
-Provide a concise paragraph summarizing the household’s current financial standing, liquidity, and asset mix.
-
-2. Net Worth & Liquidity
-Estimate total net worth, liquid net worth, and percent of assets that are illiquid (e.g., home equity, private equity).
-
-Identify any overconcentration in one account, asset class, or institution.
-
-3. Cash Flow & Lifestyle Analysis
-Calculate average annual spending over the past 3 years.
-
-Highlight top spending categories (travel, dining, subscriptions, etc.).
-
-Assess discretionary vs. essential spending.
-
-Compare to benchmarks for similar HNW households.
-
-Assign a “Plan Health Score” (0–100) based on savings rate, lifestyle sustainability, and income stability.
-
-4. Investment Review
-Evaluate portfolio diversification and asset allocation across all accounts.
-
-Flag concentrated positions (e.g., single-stock or sector risk).
-
-Review cost basis for unrealized gains/losses.
-
-Assess if the portfolio aligns with the client’s age and stated goals.
-
-5. Tax Optimization
-Identify opportunities for tax-loss harvesting, Roth conversions (including backdoor), RSU liquidation timing, and tax-efficient rebalancing.
-
-Estimate potential tax savings.
-
-6. Retirement Planning
-Assess retirement readiness based on target retirement age and income goal, current savings, and growth trajectory.
-
-Calculate required monthly savings/reallocation to stay on track, and summarize findings as in: “You need to save $X/month to retire at Y age with a $Z/year lifestyle.”
-
-7. Education & Home Goal Planning
-Analyze the feasibility of college education funding and vacation/second home purchases.
-
-Recommend funding strategies (e.g., 529 plan, strategic asset sales, cash flow adjustments).
-
-8. Estate & Risk Management
-Comment on the presence or absence of trusts, life/disability insurance, and beneficiary designations.
-
-Recommend review of estate structure, gifting strategies (e.g., DAF), and liability coverage as needed.
-
-Guidelines:
-
-Each section must be clearly labeled.
-
-Quantify and cite the data for all insights (“You spent $48,000 last year on travel and restaurants”).
-
-Use professional, actionable language with clear next steps.
-
-Output in markdown or client-ready sections for easy formatting.
-
-Once the files are uploaded, confirm the data and begin the analysis.
+Client Dataset Preview:
+{combined_text}
 """
 
         with st.spinner("Analyzing with GPT-4..."):
@@ -124,12 +64,12 @@ Once the files are uploaded, confirm the data and begin the analysis.
             )
 
         plan = response.choices[0].message.content
-        st.markdown("## Financial Plan Output")
+        st.markdown("##Financial Plan Output")
         st.markdown(plan)
-
         st.download_button("Download Plan as Text", plan, file_name="financial_plan.txt")
 
     except Exception as e:
-        st.error(f"There was a problem parsing the file: {e}")
-else:
-    st.info("Upload a .xlsx file to get started.")
+        st.error(f"There was a problem parsing the files: {e}")
+
+elif not data_file or not tx_file:
+    st.info("Upload both the household financial dataset **and** transaction history (.xlsx) files to get started.")
