@@ -9,7 +9,7 @@ st.set_page_config(page_title="HNW Financial Planning Copilot", layout="wide")
 api_key = st.secrets["OPENAI_API_KEY"] if "OPENAI_API_KEY" in st.secrets else st.text_input("Enter your OpenAI API Key", type="password")
 client = OpenAI(api_key=api_key)
 
-st.title("Advisor Dashboard – HNW Client Copilot")
+st.title("RIA Copilot")
 st.markdown("---")
 
 # Upload files
@@ -109,7 +109,7 @@ Please begin your analysis immediately.
 
         plan = response.choices[0].message.content
         st.markdown("## Financial Plan Output")
-        st.markdown(plan)
+        st.write(plan)
         st.download_button("Download Plan as Text", plan, file_name="financial_plan.txt")
 
     except Exception as e:
