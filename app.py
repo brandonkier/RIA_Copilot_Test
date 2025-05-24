@@ -86,7 +86,8 @@ Recommend review of estate structure, gifting strategies (e.g., DAF), and liabil
 **Guidelines:**  
 - Each section must be clearly labeled.  
 - Quantify and cite the data for all insights (“You spent $48,000 last year on travel and restaurants”).  
-- Output in markdown for easy formatting.
+- Use only standard markdown for all headings and tables (do NOT use code blocks).
+- Render all tables in markdown table format, not inside triple-backticks.
 
 ---
 
@@ -108,8 +109,8 @@ Please begin your analysis immediately.
             )
 
         plan = response.choices[0].message.content
-        st.markdown("## Financial Plan Output")
-        st.write(plan)
+        st.markdown("## Financial Plan Output", unsafe_allow_html=True)
+        st.markdown(plan, unsafe_allow_html=True)
         st.download_button("Download Plan as Text", plan, file_name="financial_plan.txt")
 
     except Exception as e:
