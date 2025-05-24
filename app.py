@@ -106,16 +106,6 @@ Recommend review of estate structure, gifting strategies (e.g., DAF), and liabil
 - Quantify and cite the data for all insights (“You spent $48,000 last year on travel and restaurants”).  
 - Output in markdown for easy formatting.
 
----
-
-**Household Profile:**  
-{profile_data}
-
-**Transaction History:**  
-{transaction_data}
-
----
-
 Please begin your analysis immediately.
 """
 
