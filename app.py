@@ -53,7 +53,9 @@ Financial goals (e.g., retirement, education, real estate)
 
 Each of the following modules should be clearly labeled as a section in your response. All insights must tie directly to the data provided—quantify whenever possible and reference specific fields/values. Use professional, client-ready language with clear next steps, suitable for a white-glove, premium wealth management experience.
 
-1. Financial Summary (Paraplanner-Style)
+Analyze this data and provide the following:
+
+1. Financial Summary
 Provide a concise paragraph summarizing the household’s current financial standing, liquidity, and asset mix.
 
 2. Net Worth & Liquidity
@@ -106,12 +108,6 @@ Guidelines:
 Each section must be clearly labeled.
 
 Quantify and cite the data for all insights (“You spent $48,000 last year on travel and restaurants”).
-
-Use professional, actionable language with clear next steps.
-
-Output in markdown or client-ready sections for easy formatting.
-
-Once the files are uploaded, confirm the data and begin the analysis.
 """
 
         with st.spinner("Analyzing with GPT-4..."):
