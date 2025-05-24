@@ -3,7 +3,7 @@ import pandas as pd
 from openai import OpenAI
 import os
 
-st.set_page_config(page_title="HNW Financial Planning Copilot", layout="wide")
+st.set_page_config(page_title="RIA Copilot", layout="wide")
 
 # Set up API key input (securely)
 api_key = st.secrets["OPENAI_API_KEY"] if "OPENAI_API_KEY" in st.secrets else st.text_input("Enter your OpenAI API Key", type="password")
